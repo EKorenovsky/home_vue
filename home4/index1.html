@@ -1,0 +1,161 @@
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+
+
+
+    <div id="app">
+        <!-- Page Content -->
+        <div class="container">
+
+
+            <!-- Heading Row -->
+            <div class="row my-3">
+
+            </div>
+            <!-- /.row -->
+
+            <!-- Content Row -->
+            <div class="row">
+
+                <div v-for="card in cards" class="col-md-4 mb-2">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="card-title">{{card.name}}</h2>
+                            <p class="card-text">{{card.descr}}</p>
+                            <p class="card-text">{{card.price | formatPrice}}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="#" v-bind:class="card | showClass" v-on:click.prevent="checkCard(card)">Выбрать</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+
+            <!-- Call to Action Well -->
+            <div class="card text-white bg-secondary text-left mb-2">
+                <div class="card-body">
+                    <p class="text-white m-0">Выбрано услуг на сумму: {{showSumCheckedCards | formatPrice}}</p>
+                    <p v-for="card in showCheckedCards" class="text-white m-0">{{card.name}}: {{card.price | formatPrice}}</p>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+
+    </div>
+
+    <script>
+        let app = new Vue({
+            el: '#app',
+            data: {
+                cards: [{
+                        name: 'Услуга 1',
+                        descr: 'Описание услуги 1',
+                        checked: false,
+                        price: 1100
+                    }, {
+                        name: 'Услуга 2',
+                        descr: 'Описание услуги 2',
+                        checked: false,
+                        price: 1200
+                    }, {
+                        name: 'Услуга 3',
+                        descr: 'Описание услуги 3',
+                        checked: false,
+                        price: 1300
+                    }, {
+                        name: 'Услуга 4',
+                        descr: 'Описание услуги 4',
+                        checked: false,
+                        price: 1400
+                    }, {
+                        name: 'Услуга 5',
+                        descr: 'Описание услуги 5',
+                        checked: false,
+                        price: 1500
+                    }, {
+                        name: 'Услуга 6',
+                        descr: 'Описание услуги 6',
+                        checked: false,
+                        price: 1600
+                    }, {
+                        name: 'Услуга 7',
+                        descr: 'Описание услуги 7',
+                        checked: false,
+                        price: 1700
+                    }, {
+                        name: 'Услуга 8',
+                        descr: 'Описание услуги 8',
+                        checked: false,
+                        price: 1800
+                    }, {
+                        name: 'Услуга 9',
+                        descr: 'Описание услуги 9',
+                        checked: false,
+                        price: 1900
+                    },
+
+
+
+                ]
+
+
+            },
+            computed: {
+                showCheckedCards() {
+                    return this.cards.filter((item) => (item.checked));
+                },
+                showSumCheckedCards() {
+                    let initVal = 0;
+                    return this.cards.reduce(
+                        (accumulator, currentValue) => accumulator + (currentValue.checked ? currentValue.price : 0), initVal);
+                }
+            },
+            methods: {
+                checkCard(card) {
+                    card.checked = !card.checked;
+                }
+            },
+            filters: {
+                formatPrice: function(val) {
+                    if (!parseInt(val)) return '';
+                    let arr = val.toString().split("");
+                    let index = 3;
+                    while (arr.length > index) {
+                        arr.splice(arr.length - index, 0, " ");
+                        index += 4;
+                    }
+                    return arr.join("") + ' ' + String.fromCharCode(8381);
+                },
+                showClass: function(val) {
+                    return val.checked ? 'btn btn-success btn-sm' : 'btn btn-primary btn-sm';
+                }
+            },
+        });
+    </script>
+
+
+</body>
+
+</html>

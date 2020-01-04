@@ -1,0 +1,141 @@
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- Add Vue and Bootstrap-Vue JS just before the closing </body> tag -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+
+
+
+
+
+    <div id="app">
+        <!-- Page Content -->
+        <div class="container">
+
+
+            <!-- Heading Row -->
+            <div class="row my-5">
+            </div>
+
+            <div class="card text-right mb-2">
+                <div class="card-body">
+                    <a href="#" class="btn btn-primary btn-sm" v-on:Click="showList=true">Список</a>
+                    <a href="#" class="btn btn-primary btn-sm" v-on:Click="showList=false">Кратко</a>
+                </div>
+            </div>
+
+            <!-- /.row -->
+            <!-- Content Row -->
+            <div class="row">
+
+                <div v-for="item in arrArticles" v-bind:class="showClass">
+                    <div class="card mb-4">
+                        <img class="card-img-top" v-bind:src="(showList) ? item.img : item.imgShort " v-bind:alt="item.name">
+                        <div class="card-body">
+                            <h2 class="card-title">{{item.name}}</h2>
+                            <p class="card-text">{{(showList) ? item.descr : item.descrShort }}</p>
+                            <a target="_blank" v-bind:href="item.src" class="btn btn-primary">Перейти &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+
+
+        </div>
+
+    </div>
+
+    <script>
+        let app = new Vue({
+            el: '#app',
+            data: {
+                showList: true,
+                arrArticles: [{
+                    src: 'https://hi-news.ru/space/skolko-na-marse-vody-i-xvatit-li-ee-dlya-budushhix-kolonistov.html',
+                    img: 'https://s.hi-news.ru/wp-content/uploads/2019/12/mars_colonist_eda_image_one-750x422.jpg',
+                    imgShort: 'https://source.unsplash.com/random/348x196',
+                    name: 'Сколько на Марсе воды и хватит ли ее для будущих колонистов?',
+                    descr: 'На протяжении многих столетий человек мечтал покорить Красную планету, и, кажется, уже в самом ближайшем времени мы наконец-то сможем сделать свой первый шаг в становлении межпланетным видом. Для того, чтобы суметь успешно высадиться на Марсе, специалисты НАСА планируют для начала выявить наиболее подходящее место для высадки будущих колонистов. Главным критерием в жестком отборе станет наличие водяного льда, без которого существование человека в далекой холодной пустыне красноватого оттенка станет полностью невозможным.',
+                    descrShort: 'На протяжении многих столетий человек мечтал покорить Красную планету, и, кажется, уже в самом ближайшем времени мы наконец-то...',
+                }, {
+                    src: 'https://hi-news.ru/space/kakim-byl-2019-god-dlya-apparata-insight-na-krasnoj-planete.html',
+                    img: 'https://s.hi-news.ru/wp-content/uploads/2019/12/InSight_nasa_image_one-750x422.jpeg',
+                    imgShort: 'https://source.unsplash.com/random/347x198',
+                    name: 'Каким был 2019 год для аппарата InSight на Красной планете?',
+                    descr: 'В ноябре 2018 космический аппарат NASA InSight приземлился на поверхность Красной планеты. Как правило, посадка на Марс является наиболее сложной задачей для большинства роботизированных аппаратов. Но в случае с InSight дела обстоят иначе. Непосредственно сразу после приземления InSight приступил к измерениям погодных условий и фотографированию своего нового, теперь постоянного дома. В отличие от других отправленных на Марс аппаратов, InSight не является ровером, а потому его исследовательская миссия несколько ограничена. Тем не менее, год для этого изумительного аппарата оказался более чем насыщенным.',
+                    descrShort: 'В ноябре 2018 космический аппарат NASA InSight приземлился на поверхность Красной планеты. Как правило, посадка на Марс является...',
+                }, {
+                    src: 'https://hi-news.ru/space/na-marse-nashli-ozero-kak-teper-izmenitsya-poisk-zhizni-na-krasnoj-planete.html',
+                    img: 'https://s.hi-news.ru/wp-content/uploads/2018/07/mars-lake-750x401.jpg',
+                    imgShort: 'https://source.unsplash.com/random/348x195',
+                    name: 'На Марсе нашли озеро. Как теперь изменится поиск жизни на Красной планете?',
+                    descr: 'На прошлой неделе поиск жизни на Марсе стал интереснее. На протяжении десятилетий ученые вглядывались в красные пустыни этой сухой и пыльной планеты, пытаясь выделить области, в которых миллиарды лет назад могла укорениться жизнь, когда марсианский климат был теплым и влажным. Но 25 июля ученые объявили, что нашли признаки наличия большого озера с жидкой водой под толстым слоем льда возле южного полюса планеты.',
+                    descrShort: 'На прошлой неделе поиск жизни на Марсе стал интереснее. На протяжении десятилетий ученые вглядывались в красные пустыни этой ...',
+                }, {
+                    src: 'https://hi-news.ru/technology/terraformirovanie-marsa-nevozmozhno-dlya-etogo-u-krasnoj-planety-naxvataet-ugleroda.html',
+                    img: 'https://s.hi-news.ru/wp-content/uploads/2018/07/mars-terraforming-750x304.jpg',
+                    imgShort: 'https://source.unsplash.com/random/350x196',
+                    name: 'Терраформирование Марса невозможно. Для этого у Красной планеты нехватает углерода',
+                    descr: 'Об этом мечтает Илон Маск. Об этом мечтают в аэрокосмическом агентстве NASA. А Арнольд Шварценеггер уже успел это сделать (правда, в лишь в кино). Но, возможно ли это на самом деле? Речь идет о терраформировании Марса – превращении Красной планеты в голубую с помощью геоинженерии, которая сделает ее атмосферу более плотной, а окружающую среду и климат более приветливыми для людей. К сожалению, судя по выводам нового исследования, статья о котором была опубликована в журнале Nature Astronomy, фантастической мечте, о которой грезят уже далеко не одно поколение ученых, похоже, суждено так остаться мечтой. По крайней мере, в течение ближайшего будущего.',
+                    descrShort: 'Об этом мечтает Илон Маск. Об этом мечтают в аэрокосмическом агентстве NASA. А Арнольд Шварценеггер уже успел это сделать ...',
+                }, {
+                    src: 'https://hi-news.ru/space/pylevaya-burya-na-marse-zatixaet-no-rover-opportyuniti-poka-molchit.html',
+                    img: 'https://s.hi-news.ru/wp-content/uploads/2018/08/Opportunity-750x304.jpg',
+                    imgShort: 'https://source.unsplash.com/random/347x197',
+                    name: 'Пылевая буря на Марсе затихает, но ровер «Оппортьюнити» пока молчит',
+                    descr: 'Пылевые бури на Марсе – довольно частое явление. Обычно они случаются, когда в Южном полушарии Красной планеты наступает лето. И хотя они могут начинаться весьма неожиданно, длятся они, как правило, не больше нескольких недель, создавая погодный коллапс лишь на определенной территории. Но иногда марсианские пылевые бури могут становиться настоящим глобальным феноменом.',
+                    descrShort: 'Пылевые бури на Марсе – довольно частое явление. Обычно они случаются, когда в Южном полушарии Красной планеты наступает лето. И хотя они ...',
+                }, {
+                    src: 'https://hi-news.ru/space/curiosity-zafiksiroval-rost-koncentracii-kisloroda-na-marse.html',
+                    img: 'https://s.hi-news.ru/wp-content/uploads/2019/11/hod-750x422.jpg',
+                    imgShort: 'https://source.unsplash.com/random/346x199',
+                    name: 'Curiosity зафиксировал рост концентрации кислорода на Марсе',
+                    descr: 'Впервые в истории освоения космоса ученые измерили сезонные изменения газов, которые заполняют атмосферу непосредственно над поверхностью кратера Гейл на Марсе. В результате они заметили нечто крайне интересное: кислород, газ, которым дышат многие земные существа, «ведет» себя очень странно. В частности, был зафиксирован рост его концентрации в атмосфере планеты.',
+                    descrShort: 'Впервые в истории освоения космоса ученые измерили сезонные изменения газов, которые заполняют атмосферу непосредственно над поверхностью кратера ...',
+                }],
+
+
+            },
+            filters: {
+
+                showDescr2: function(val) {
+                    if (this.$data.showList)
+                        return val.descr
+                    else
+                        return val.descrShort;
+                    //return (this.showList ? val.descr : val.descr);
+                },
+                showImg: function(val) {
+                    return (this.showList ? val.img : val.img);
+                },
+            },
+            computed: {
+                showClass() {
+                    return this.showList ? 'col-md-12' : 'col-md-4';
+                },
+
+            },
+        });
+    </script>
+
+
+</body>
+
+</html>
