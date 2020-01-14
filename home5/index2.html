@@ -21,21 +21,22 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            Vue.component('slider-citations', {
-                props: {
-                    'citations': {
-                        type: Array,
-                        default: function() {
-                            return [{
-                                author: '',
-                                text: ''
-                            }];
-                        }
+    <script>
+        Vue.component('slider-citations', {
+            props: {
+                'citations': {
+                    type: Array,
+                    default: function() {
+                        return [{
+                            author: '',
+                            text: ''
+                        }];
                     }
-                },
-                template: `<div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+                }
+            },
+            template: `<div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li v-for="(citation,index) in citations" :key="index" data-target="#carouselExampleIndicators" v-bind:data-slide-to="index" v-bind:class="{'active': index==0}"></li>
                         </ol>
@@ -57,48 +58,48 @@
                             <span class="sr-only">Next</span>
                         </a>
                     </div>`
-            });
+        });
 
 
 
 
 
-            let app = new Vue({
-                el: "#app",
-                data: {
-                    appCitations: [{
-                        author: 'Клод Адриан Гельвеций',
-                        text: 'Истину можно найти только в запрещенных книгах. В остальных — лгут.',
-                    }, {
-                        author: 'Марк Твен',
-                        text: 'Всегда честно признавай свои ошибки, это притупит бдительность начальства и позволит тебе натворить новые.',
-                    }, {
-                        author: 'О. Генри',
-                        text: 'Это было и красиво и просто, как всякое подлинно великое жульничество.',
-                    }, {
-                        author: 'Зигмунд Фрейд',
-                        text: 'Задача сделать человека счастливым не входила в план сотворения мира.',
-                    }, {
-                        author: 'Иммануил Кант',
-                        text: 'Человек может стать человеком только путем воспитания. Он — то, что делает из него воспитание.',
-                    }, {
-                        author: 'Тупак Амару Шакур',
-                        text: 'Сначала они все крутые, но когда у тебя в руках ствол-они разговаривают по другому.',
-                    }, ],
+        let app = new Vue({
+            el: "#app",
+            data: {
+                appCitations: [{
+                    author: 'Клод Адриан Гельвеций',
+                    text: 'Истину можно найти только в запрещенных книгах. В остальных — лгут.',
+                }, {
+                    author: 'Марк Твен',
+                    text: 'Всегда честно признавай свои ошибки, это притупит бдительность начальства и позволит тебе натворить новые.',
+                }, {
+                    author: 'О. Генри',
+                    text: 'Это было и красиво и просто, как всякое подлинно великое жульничество.',
+                }, {
+                    author: 'Зигмунд Фрейд',
+                    text: 'Задача сделать человека счастливым не входила в план сотворения мира.',
+                }, {
+                    author: 'Иммануил Кант',
+                    text: 'Человек может стать человеком только путем воспитания. Он — то, что делает из него воспитание.',
+                }, {
+                    author: 'Тупак Амару Шакур',
+                    text: 'Сначала они все крутые, но когда у тебя в руках ствол-они разговаривают по другому.',
+                }, ],
+            },
+            computed: {
+                currentTabComponent() {
+                    return 'tab-' + this.currentTab;
                 },
-                computed: {
-                    currentTabComponent() {
-                        return 'tab-' + this.currentTab;
-                    },
 
+            },
+            filters: {
+                showPageName: function(val) {
+                    return (val.charAt(0).toUpperCase() + val.slice(1));
                 },
-                filters: {
-                    showPageName: function(val) {
-                        return (val.charAt(0).toUpperCase() + val.slice(1));
-                    },
-                },
-            });
-        </script>
+            },
+        });
+    </script>
 
 
 </body>
