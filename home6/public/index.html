@@ -80,7 +80,7 @@
                     <p class="card-text">{{book.name}}</p>
                     </div>
                     <div class="card-footer">
-                        <router-link v-bind:to="'/books/'+book.id" exact class="btn btn-primary">Подробно...</router-link>
+                        <router-link  :to="{name:'books', params:{id: book.id}}" exact class="btn btn-primary">Подробно...</router-link>
                     </div>
                 </div>
                 </div>
@@ -272,12 +272,13 @@
 
         const MainBookInfo = {
             props: ['id', 'get_book_by_id'],
-            template: `<div class="row align-items-center my-5">
+            template: `<div class="row align-items-top my-5">
             <div class="col-lg-7">
                 <img width="900" height="400" class="img-fluid rounded mb-4 mb-lg-0" v-bind:src="get_book_by_id(id).img" alt="">
             </div>
             <div class="col-lg-5">
                 <h1 class="font-weight-light">{{get_book_by_id(id).name}}</h1>
+                <h3>Автор: {{get_book_by_id(id).author}}</h3>
                 <p>{{get_book_by_id(id).descr}}</p>
             </div>
             </div>`,
@@ -309,6 +310,7 @@
                 },
             }, {
                 path: '/books/:id',
+                name: 'books',
                 components: {
                     'header': MainHeader,
                     'work-area': MainBookInfo,
