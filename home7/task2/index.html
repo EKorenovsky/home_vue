@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Изучаем HTML</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="left-side">
+            <transition-group name="div-list" tag="div" class="items-container">
+                <div v-for="item in items" :key="item.id" :class="[getFontColorClass(item),getFontSizeClass(item),getClass(item)]" @click="checkDiv(item)">
+                    {{item.id}}
+                </div>
+            </transition-group>
+        </div>
+        <div class="right-side">
+            <button @click="shuffleItems">Пересортировка</button>
+            <button @click="initGame">Новая игра</button>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        function randomInteger(min, max) {
+            let rand = min + Math.random() * (max + 1 - min);
+            return Math.floor(rand);
+        }
+
+        const app = new Vue({
+            el: ".container",
+            data: {
+                sizeItems: 100,
+                items: [],
+                currentId: 0,
+                itemIdErrorChecking: 0,
+            },
+            methods: {
+                shuffleItems() {
+                    this.items.sort(() => {
+                        return Math.random() * 2 - 1;
+                    })
+                },
+                getClass(item) {
+                    if (item.checked) {
+                        if (item.id <= (this.currentId + 1))
+                            return 'checked-success';
+                        else
+                            return 'checked-error';
+                    } else
+                        return '';
+
+                },
+                getFontColorClass(item) {
+                    return `fc${item.rndColor}`;
+                },
+                getFontSizeClass(item) {
+                    return `fs${item.rndSize}`;
+                },
+                checkDiv(item) {
+                    if (this.itemIdErrorChecking > 0) {
+                        if (item.id == this.itemIdErrorChecking) {
+                            this.itemIdErrorChecking = 0;
+                            item.checked = false;
+                        }
+                    } else {
+                        if (item.id == (this.currentId + 1)) {
+                            this.currentId++;
+                            item.checked = true;
+                        } else if (item.id > this.currentId) {
+                            this.itemIdErrorChecking = item.id;
+                            item.checked = true;
+                        }
+                    };
+                },
+                initGame() {
+                    this.items = [];
+                    for (let i = 1; i <= this.sizeItems; i++) {
+                        this.items.push({
+                            id: i,
+                            checked: false,
+                            rndSize: randomInteger(1, 3),
+                            rndColor: randomInteger(1, 3),
+                        });
+                        this.currentId = 0;
+                        this.itemIdErrorChecking = 0;
+                    };
+                    this.shuffleItems();
+                }
+
+            },
+            created() {
+                this.initGame();
+            }
+        });
+    </script>
+
+
+
+</body>
+
+</html>
