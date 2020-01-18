@@ -11,7 +11,7 @@
 
         <!-- CUSTOMIZE -->
         <link rel="stylesheet" href="css/main.css">
-        <script src="js/script.js"></script>
+        <!--<script src="js/script.js"></script>-->
 
         <!--VUE-->
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -25,41 +25,62 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="todolist not-done">
-                        <h1>Todos</h1>
-                        <input type="text" class="form-control add-todo" placeholder="Add todo">
-                        <button id="checkAll" class="btn btn-success">Mark all as done</button>
+                        <h1>Активные задачи</h1>
+                        <input type="text" class="form-control mt-2" v-model="item.name" placeholder="Имя задачи">
+                        <input type="text" class="form-control my-2" v-model="item.description" placeholder="Описание задачи">
+                        <input type="date" class="form-control mb-2" v-model="item.dateStart" placeholder="Дата задачи">
+
+                        <button @click="addNewToDoItem()" class="btn btn-success">Добавить задачу</button>
 
                         <hr>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">№</th>
+                                    <th scope="col">Дата</th>
+                                    <th scope="col">Название</th>
+                                    <th scope="col">Описание</th>
+                                    <th scope="col"></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item,index) in getActive" :key="index">
+                                    <td>
+                                        {{index+1}}
+                                    </td>
+                                    <td>
+                                        {{item.dateStart}}
+                                    </td>
+                                    <td>
+                                        {{item.name}}
+                                    </td>
+                                    <td>
+                                        {{item.description}}
+                                    </td>
+                                    <td>
+                                        <button class="btn-danger" @click="item.finish();setLocalStorage();">X</button>
+                                    </td>
+                                </tr>
+
+                        </table>
+
                         <ul id="sortable" class="list-unstyled">
-                            <li class="ui-state-default">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value="" />Take out the trash</label>
-                                </div>
-                            </li>
-                            <li class="ui-state-default">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value="" />Buy bread</label>
-                                </div>
-                            </li>
-                            <li class="ui-state-default">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" value="" />Teach penguins to fly</label>
-                                </div>
+                            <li class="ui-state-default" v-for="item in getActive">
+
                             </li>
                         </ul>
                         <div class="todo-footer">
-                            <strong><span class="count-todos"></span></strong> Items Left
+                            <strong><span class="count-todos">{{getActive.length}}</span></strong>&nbsp;активных задач
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="todolist">
-                        <h1>Already Done</h1>
+                        <h1>Завершенные задачи</h1>
                         <ul id="done-items" class="list-unstyled">
-                            <li>Some item <button class="remove-item btn btn-default btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span></button></li>
+                            <li v-for="item in getFinished">{{item.name}}</li>
 
                         </ul>
                     </div>
@@ -68,37 +89,16 @@
         </div>
         <script>
             class ToDoItem {
-                constructor(name, description, status, dateStart) {
-                    this.canvas = canvas;
-                    this.paddle = paddle;
-                    this.ball = ball;
-                    this.bricks = [];
-                    for (let c = 0; c < columnsBricks; c++) {
-                        this.bricks[c] = [];
-                        for (let r = 0; r < rowsBricks; r++) {
-                            this.bricks[c][r] = new Brick(canvas, ball, c, r);
-                        }
-                    }
-
-
+                constructor(name, description, dateStart, status = false) {
+                    this.name = name;
+                    this.description = description;
+                    this.dateStart = dateStart;
+                    this.status = status;
                 }
 
-                draw() {
-                    let ctx = this.canvas.getContext("2d");
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    this.paddle.draw();
-                    this.ball.draw();
-                    this.bricks.forEach(bricksRow => bricksRow.forEach(brick => brick.draw()));
-
-                    if (this.ball.stop) {
-                        clearTimeout(globalTimer);
-                        alert("ИГРА ОКОНЧЕНА!");
-                        document.location.reload();
-                    }
-
+                finish() {
+                    this.status = true;
                 }
-
 
             }
 
@@ -108,6 +108,50 @@
                 el: ".container",
                 data: {
                     toDoList: [],
+                    item: {
+                        name: '',
+                        description: '',
+                        dateStart: '',
+                        status: false,
+                    },
+
+                },
+                methods: {
+                    addNewToDoItem() {
+                        this.toDoList.push(new ToDoItem(this.item.name, this.item.description, this.item.dateStart));
+                    },
+                    setLocalStorage() {
+                        let arr = [];
+                        this.toDoList.forEach(el => arr.push(el));
+                        localStorage.setItem('toDoItemList', JSON.stringify(arr));
+                    }
+                },
+                computed: {
+                    getFinished: function() {
+                        return this.toDoList.filter((el) => (el.status));
+                    },
+                    getActive: function() {
+                        return this.toDoList.filter((el) => (!el.status));
+                    }
+                },
+                watch: {
+                    toDoList(oldValue, newValue) {
+                        this.setLocalStorage();
+                    },
+
+                },
+                created() {
+                    let locStorage = localStorage.getItem('toDoItemList');
+                    if (locStorage) {
+                        let objLocalStorage = JSON.parse(locStorage);
+                        /*for (let i = 0; i < objLocalStorage.length; i++) {
+                            this.toDoList.push(new ToDoItem(objLocalStorage[i[]]));
+                        }*/
+                        objLocalStorage.forEach(el => console.log(el));
+
+                        objLocalStorage.forEach(el => this.toDoList.push(new ToDoItem(el.name, el.description, el.dateStart, el.status)));
+
+                    }
 
                 }
             });
