@@ -1,0 +1,118 @@
+<htm>
+
+    <head>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+        <!-- CUSTOMIZE -->
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/script.js"></script>
+
+        <!--VUE-->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/vue-router@3.1.4/dist/vue-router.js"></script>
+
+
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="todolist not-done">
+                        <h1>Todos</h1>
+                        <input type="text" class="form-control add-todo" placeholder="Add todo">
+                        <button id="checkAll" class="btn btn-success">Mark all as done</button>
+
+                        <hr>
+                        <ul id="sortable" class="list-unstyled">
+                            <li class="ui-state-default">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" />Take out the trash</label>
+                                </div>
+                            </li>
+                            <li class="ui-state-default">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" />Buy bread</label>
+                                </div>
+                            </li>
+                            <li class="ui-state-default">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="" />Teach penguins to fly</label>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="todo-footer">
+                            <strong><span class="count-todos"></span></strong> Items Left
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="todolist">
+                        <h1>Already Done</h1>
+                        <ul id="done-items" class="list-unstyled">
+                            <li>Some item <button class="remove-item btn btn-default btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span></button></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            class ToDoItem {
+                constructor(name, description, status, dateStart) {
+                    this.canvas = canvas;
+                    this.paddle = paddle;
+                    this.ball = ball;
+                    this.bricks = [];
+                    for (let c = 0; c < columnsBricks; c++) {
+                        this.bricks[c] = [];
+                        for (let r = 0; r < rowsBricks; r++) {
+                            this.bricks[c][r] = new Brick(canvas, ball, c, r);
+                        }
+                    }
+
+
+                }
+
+                draw() {
+                    let ctx = this.canvas.getContext("2d");
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    this.paddle.draw();
+                    this.ball.draw();
+                    this.bricks.forEach(bricksRow => bricksRow.forEach(brick => brick.draw()));
+
+                    if (this.ball.stop) {
+                        clearTimeout(globalTimer);
+                        alert("ИГРА ОКОНЧЕНА!");
+                        document.location.reload();
+                    }
+
+                }
+
+
+            }
+
+
+
+            const app = new Vue({
+                el: ".container",
+                data: {
+                    toDoList: [],
+
+                }
+            });
+        </script>
+    </body>
+
+
+</htm>
