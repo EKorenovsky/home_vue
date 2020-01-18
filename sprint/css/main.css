@@ -47,3 +47,18 @@ li.ui-state-default:last-child {
 #checkAll {
     margin-top: 10px;
 }
+
+.rowlist-enter-active,
+.rowlist-leave-active {
+    transition: opacity 5.5s;
+}
+
+.rowlist-enter,
+.rowlist-leave-to {
+    opacity: 0;
+}
+
+.rowlist-enter-to,
+.rowlist-leave {
+    opacity: 1;
+}

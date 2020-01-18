@@ -63,7 +63,7 @@
                                         <button class="btn-danger" @click="item.finish();setLocalStorage();">X</button>
                                     </td>
                                 </tr>
-
+                            </tbody>
                         </table>
 
                         <ul id="sortable" class="list-unstyled">
@@ -79,10 +79,13 @@
                 <div class="col-md-6">
                     <div class="todolist">
                         <h1>Завершенные задачи</h1>
-                        <ul id="done-items" class="list-unstyled">
-                            <li v-for="item in getFinished">{{item.name}}</li>
 
+                        <ul id="done-items" class="list-unstyled">
+                            <transition-group name="rowlist" mode="out-in" appear>
+                                <li v-for="(item,index) in getFinished" :key="index">{{item.name}}</li>
+                            </transition-group>
                         </ul>
+
                     </div>
                 </div>
             </div>
