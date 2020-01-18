@@ -31,6 +31,7 @@
                         <input type="date" class="form-control mb-2" v-model="item.dateStart" placeholder="Дата задачи">
 
                         <button @click="addNewToDoItem()" class="btn btn-success">Добавить задачу</button>
+                        <button @click="clearStorage()" class="btn btn-danger">Очистить хранилище</button>
 
                         <hr>
 
@@ -127,6 +128,9 @@
                         let arr = [];
                         this.toDoList.forEach(el => arr.push(el));
                         localStorage.setItem('toDoItemList', JSON.stringify(arr));
+                    },
+                    clearStorage() {
+                        localStorage.clear();
                     }
                 },
                 computed: {
