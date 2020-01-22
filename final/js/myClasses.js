@@ -62,6 +62,13 @@ function setRandomMessage(user) {
     axios.get('https://fish-text.ru/get?type=title&number=1').then(response => {
         if (response.data.status == "success") {
             user.addMessage(response.data.text, 0);
+            setScrollBottom();
         }
-    })
+    });
+
 };
+
+function setScrollBottom() {
+    let domDiv = app.$refs["msg-history"];
+    setTimeout(() => (domDiv.scrollBy(0, domDiv.clientHeight)), 50);
+}

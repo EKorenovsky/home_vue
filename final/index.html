@@ -51,7 +51,7 @@
 
                 </div>
                 <div class="mesgs">
-                    <div class="msg_history">
+                    <div class="msg_history" ref="msg-history">
 
                         <div v-for="msg in getActiveUserMessages">
                             <div v-if="msg.direction==0" class="incoming_msg">
@@ -105,10 +105,12 @@
                     user.status = true;
                     this.activeUser = user;
                     this.newMessage = "";
+                    let domDiv = app.$refs["msg-history"];
                 },
                 addMessage() {
                     if ((this.activeUser) && (this.newMessage)) {
                         this.activeUser.addMessage(this.newMessage, 1);
+                        setScrollBottom();
                         setTimeout(() => setRandomMessage(this.activeUser), 1250);
                     }
                 },
