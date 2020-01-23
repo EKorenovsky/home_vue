@@ -136,10 +136,18 @@
 
             },
             mounted() {
+                let observer = new MutationObserver(function(records) {
+                    let domDiv = records[0].target;
+                    domDiv.scrollTop = domDiv.scrollHeight;
+                });
+                observer.observe(this.$refs["msg-history"], {
+                    childList: true,
+                    subtree: true,
+                });
 
             },
             created() {
-                //this.users = 
+
             }
 
         });

@@ -69,6 +69,8 @@ function setRandomMessage(user) {
 };
 
 function setScrollBottom() {
+    /*
     let domDiv = app.$refs["msg-history"];
-    setTimeout(() => (domDiv.scrollBy(0, domDiv.clientHeight)), 50);
+    setTimeout(() => (domDiv.scrollTop = domDiv.scrollHeight), 50);
+    */
 }
