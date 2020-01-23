@@ -24,32 +24,12 @@
         <h3 class=" text-center">Окно чата</h3>
         <div class="messaging">
             <div class="inbox_msg">
+
                 <div class="inbox_people">
-                    <div class="headind_srch">
-                        <div class="recent_heading">
-                            <h4>Активные</h4>
-                        </div>
-                        <div class="srch_bar">
-                            <div class="stylish-input-group">
-                                <input type="text" class="search-bar" placeholder="Поиск" v-model="strForUsersFiltered">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="inbox_chat">
-                        <div v-for="(user,index) in getUsersByFilter" @click="startMessages(user)" :class="[{chat_list:true},{active_chat:user.status}]">
-                            <div class="chat_people">
-                                <div class="chat_img"> <img :src="user.img" :alt="user.name"> </div>
-                                <div class="chat_ib">
-                                    <h5>{{user.name}}&nbsp;<span class="chat_date">{{user.getDate()}}</span></h5>
-                                    <p>{{user.about}}</p>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-
+                    <component-users-search :filter_text="strForUsersFiltered" :cb_modify_filter_text="modifyFilterText"></component-users-search>
+                    <component-users-in-chat :users="getUsersByFilter" :fn_start_messages="startMessages"></component-users-in-chat>
                 </div>
+
                 <div class="mesgs">
                     <div class="msg_history" ref="msg-history">
 
@@ -88,6 +68,44 @@
     </div>
 
     <script>
+        let ComponentSearchUserInChat = {
+            props: ['filter_text', 'cb_modify_filter_text'],
+            template: `<div class="headind_srch">
+                        <div class="recent_heading">
+                            <h4>Активные</h4>
+                        </div>
+                        <div class="srch_bar">
+                            <div class="stylish-input-group">
+                                <input type="text" class="search-bar" placeholder="Поиск" :value="filter_text"  @input="cb_modify_filter_text($event.target.value)">
+                            </div>
+                        </div>
+                    </div>`,
+        };
+
+        let ComponentUserInChat = {
+            props: ['user', 'index', 'fn_start_messages'],
+            template: `<div @click="fn_start_messages(user)" :class="[{chat_list:true},{active_chat:user.status}]">
+                            <div class="chat_people">
+                                <div class="chat_img"> <img :src="user.img" :alt="user.name"> </div>
+                                <div class="chat_ib">
+                                    <h5>{{user.name}}&nbsp;<span class="chat_date">{{user.getDate()}}</span></h5>
+                                    <p>{{user.about}}</p>
+                                </div>
+                            </div>
+                        </div>`,
+        };
+
+        let ComponentUsersInChat = {
+            props: ['users', 'fn_start_messages'],
+            template: `<div class="inbox_chat">
+                <component-user-in-chat v-for="(user,index) in users" :key="index" :user="user" :index="index" :fn_start_messages="fn_start_messages"></component-user-in-chat>
+            </div>`,
+            components: {
+                'component-user-in-chat': ComponentUserInChat,
+            }
+        };
+
+
         const app = new Vue({
             el: ".container",
             data: {
@@ -96,6 +114,10 @@
                 activeUser: '',
                 newMessage: '',
                 info: '',
+            },
+            components: {
+                'component-users-search': ComponentSearchUserInChat,
+                'component-users-in-chat': ComponentUsersInChat,
             },
             methods: {
                 startMessages(user) {
@@ -114,6 +136,9 @@
                         setTimeout(() => setRandomMessage(this.activeUser), 1250);
                     }
                 },
+                modifyFilterText(strFilter) {
+                    this.strForUsersFiltered = strFilter;
+                }
             },
             computed: {
                 getUsersByFilter: function() {
