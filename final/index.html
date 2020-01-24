@@ -28,14 +28,12 @@
         <h3 class=" text-center">Окно чата</h3>
         <div class="messaging">
             <div class="inbox_msg">
-
                 <inbox-people>
-                    <users-search :filter_text="strForUsersFiltered " :cb_modify_filter_text="modifyFilterText "></users-search>
+                    <users-search :filter_text="strForUsersFiltered" :cb_modify_filter_text="modifyFilterText"></users-search>
                     <users-in-chat>
                         <user-in-chat v-for="(user,index) in getUsersByFilter" :user="user" :key="index" :index="index" :fn_start_messages="startMessages"></user-in-chat>
                     </users-in-chat>
                 </inbox-people>
-
 
                 <div class="mesgs">
                     <msg-history ref="msg-history">
@@ -44,58 +42,83 @@
                     <add-message :fn_add_message="addMessage"></add-message>
                 </div>
             </div>
-
-
             <p class="text-center top_spac "> Design by <a target="_blank " href="https://bootsnipp.com/snippets/1ea0N ">Sunil Rajput</a></p>
-
         </div>
     </div>
 
     <script>
         let eventBus = new Vue();
 
-        const app = new Vue({
-            el: ".container ",
-            data: {
-                users: getUsers(),
-                strForUsersFiltered: '',
+        const store = new Vuex.Store({
+            state: {
+                users: [],
                 activeUser: undefined,
+                strForUsersFiltered: '',
             },
-            methods: {
-                startMessages(user) {
-                    this.users.forEach((elm) => {
+            getters: {
+                getUsersByFilter(state, getters) {
+                    if (state.strForUsersFiltered)
+                        return state.users.filter((elm) => {
+                            return (elm.name.toLowerCase().includes(state.strForUsersFiltered.toLowerCase()) || elm.about.toLowerCase().includes(state.strForUsersFiltered.toLowerCase()));
+                        });
+                    else
+                        return state.users;
+
+                },
+                getActiveUserMessages(state, getters) {
+                    if (state.activeUser)
+                        return state.activeUser.messages;
+                    else
+                        return [];
+                },
+            },
+            mutations: {
+                modifyFilterText(state, strFilter) {
+                    state.strForUsersFiltered = strFilter;
+                },
+                addUsers(state, arrUsers) {
+                    arrUsers.forEach((elm) => {
+                        state.users.push(elm);
+                    });
+                },
+                startMessages(state, user) {
+                    state.users.forEach((elm) => {
                         elm.status = false;
                     });
                     user.status = true;
-                    this.activeUser = user;
+                    state.activeUser = user;
                     eventBus.$emit('userchange');
                 },
-                addMessage(newMessage) {
-                    if ((this.activeUser) && (newMessage)) {
-                        this.activeUser.addMessage(newMessage, 1);
-                        setTimeout(() => setRandomMessage(this.activeUser), 1250);
+            },
+            actions: {
+                loadData(context) {
+                    context.commit('addUsers', getUsers());
+                },
+                addMessage(context, newMessage) {
+                    if ((context.state.activeUser) && (newMessage)) {
+                        context.state.activeUser.addMessage(newMessage, 1);
+                        setTimeout(() => setRandomMessage(context.state.activeUser), 1250);
                     }
                 },
-                modifyFilterText(strFilter) {
-                    this.strForUsersFiltered = strFilter;
-                }
+            }
+        });
+        store.dispatch('loadData');
+
+
+
+
+        const app = new Vue({
+            el: ".container ",
+            data: {},
+            store: store,
+            methods: {
+                ...Vuex.mapMutations(['startMessages', 'modifyFilterText']),
+                ...Vuex.mapActions(['addMessage']),
+
             },
             computed: {
-                getUsersByFilter: function() {
-                    if (this.strForUsersFiltered)
-                        return this.users.filter((elm) => {
-                            return (elm.name.toLowerCase().includes(this.strForUsersFiltered.toLowerCase()) || elm.about.toLowerCase().includes(this.strForUsersFiltered.toLowerCase()));
-                        });
-                    else
-                        return this.users;
-
-                },
-                getActiveUserMessages: function() {
-                    if (this.activeUser)
-                        return this.activeUser.messages;
-                    else
-                        return [];
-                }
+                ...Vuex.mapState(['activeUser', 'strForUsersFiltered']),
+                ...Vuex.mapGetters(['getUsersByFilter', 'getActiveUserMessages']),
             },
             mounted() {
                 let observer = new MutationObserver(function(records) {
@@ -106,7 +129,6 @@
                     childList: true,
                     subtree: true,
                 });
-
             },
         });
     </script>

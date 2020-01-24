@@ -10,7 +10,7 @@ Vue.component('users-search', {
                 </div>
                 <div class="srch_bar ">
                     <div class="stylish-input-group ">
-                        <input type="text " class="search-bar " placeholder="Поиск " :value="filter_text "  @input="cb_modify_filter_text($event.target.value) ">
+                        <input type="text " class="search-bar " placeholder="Поиск " :value="filter_text"  @input="cb_modify_filter_text($event.target.value) ">
                     </div>
                 </div>
             </div>`,
@@ -70,8 +70,8 @@ Vue.component('add-message', {
     data: function() { return { newMessage: '' } },
     template: `<div class="type_msg ">
     <div class="input_msg_write ">
-        <input type="text " class="write_msg px-2 " placeholder="Введите сообщение..." v-model="newMessage " v-on:keyup.enter="fn_add_message(newMessage) " />
-        <button class="msg_send_btn mx-2 " type="button " @click="fn_add_message(newMessage) "><i class="fa fa-paper-plane-o " aria-hidden="true "></i></button>
+        <input type="text " class="write_msg px-2 " placeholder="Введите сообщение..." v-model="newMessage" v-on:keyup.enter="fn_add_message(newMessage)" />
+        <button class="msg_send_btn mx-2 " type="button " @click="fn_add_message(newMessage)"><i class="fa fa-paper-plane-o " aria-hidden="true "></i></button>
     </div>
 </div>`,
     created() { eventBus.$on("userchange", () => { this.newMessage = ""; }); }
