@@ -9,13 +9,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-    <script src="js/myClasses.js"></script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vuex"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <link rel="stylesheet" href="css/main.css">
+
+    <script src="js/myClasses.js"></script>
+    <script src="js/myComponents.js"></script>
+
 
 </head>
 
@@ -25,99 +29,37 @@
         <div class="messaging">
             <div class="inbox_msg">
 
-                <div class="inbox_people">
-                    <component-users-search :filter_text="strForUsersFiltered" :cb_modify_filter_text="modifyFilterText"></component-users-search>
-                    <component-users-in-chat :users="getUsersByFilter" :fn_start_messages="startMessages"></component-users-in-chat>
-                </div>
+                <inbox-people>
+                    <users-search :filter_text="strForUsersFiltered " :cb_modify_filter_text="modifyFilterText "></users-search>
+                    <users-in-chat>
+                        <user-in-chat v-for="(user,index) in getUsersByFilter" :user="user" :key="index" :index="index" :fn_start_messages="startMessages"></user-in-chat>
+                    </users-in-chat>
+                </inbox-people>
+
 
                 <div class="mesgs">
-                    <div class="msg_history" ref="msg-history">
-
-                        <div v-for="msg in getActiveUserMessages">
-                            <div v-if="msg.direction==0" class="incoming_msg">
-                                <div class="incoming_msg_img"> <img :src="activeUser.img" :alt="activeUser.name"> </div>
-                                <div class="received_msg">
-                                    <div class="received_withd_msg">
-                                        <p>{{msg.text}}
-                                        </p>
-                                        <span class="time_date">{{msg.getDateForHtml()}}</span></div>
-                                </div>
-                            </div>
-
-                            <div v-else class="outgoing_msg">
-                                <div class="sent_msg">
-                                    <p>{{msg.text}}</p>
-                                    <span class="time_date">{{msg.getDateForHtml()}}</span> </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="type_msg">
-                        <div class="input_msg_write">
-                            <input type="text" class="write_msg px-2" placeholder="Type a message" v-model="newMessage" v-on:keyup.enter="addMessage()" />
-                            <button class="msg_send_btn mx-2" type="button" @click="addMessage()"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
-                        </div>
-                    </div>
+                    <msg-history ref="msg-history">
+                        <message v-for="(msg,index) in getActiveUserMessages" :msg="msg" :key="index" :active_user="activeUser"></message>
+                    </msg-history>
+                    <add-message :fn_add_message="addMessage"></add-message>
                 </div>
             </div>
 
 
-            <p class="text-center top_spac"> Design by <a target="_blank" href="https://bootsnipp.com/snippets/1ea0N">Sunil Rajput</a></p>
+            <p class="text-center top_spac "> Design by <a target="_blank " href="https://bootsnipp.com/snippets/1ea0N ">Sunil Rajput</a></p>
 
         </div>
     </div>
 
     <script>
-        let ComponentSearchUserInChat = {
-            props: ['filter_text', 'cb_modify_filter_text'],
-            template: `<div class="headind_srch">
-                        <div class="recent_heading">
-                            <h4>Активные</h4>
-                        </div>
-                        <div class="srch_bar">
-                            <div class="stylish-input-group">
-                                <input type="text" class="search-bar" placeholder="Поиск" :value="filter_text"  @input="cb_modify_filter_text($event.target.value)">
-                            </div>
-                        </div>
-                    </div>`,
-        };
-
-        let ComponentUserInChat = {
-            props: ['user', 'index', 'fn_start_messages'],
-            template: `<div @click="fn_start_messages(user)" :class="[{chat_list:true},{active_chat:user.status}]">
-                            <div class="chat_people">
-                                <div class="chat_img"> <img :src="user.img" :alt="user.name"> </div>
-                                <div class="chat_ib">
-                                    <h5>{{user.name}}&nbsp;<span class="chat_date">{{user.getDate()}}</span></h5>
-                                    <p>{{user.about}}</p>
-                                </div>
-                            </div>
-                        </div>`,
-        };
-
-        let ComponentUsersInChat = {
-            props: ['users', 'fn_start_messages'],
-            template: `<div class="inbox_chat">
-                <component-user-in-chat v-for="(user,index) in users" :key="index" :user="user" :index="index" :fn_start_messages="fn_start_messages"></component-user-in-chat>
-            </div>`,
-            components: {
-                'component-user-in-chat': ComponentUserInChat,
-            }
-        };
-
+        let eventBus = new Vue();
 
         const app = new Vue({
-            el: ".container",
+            el: ".container ",
             data: {
                 users: getUsers(),
                 strForUsersFiltered: '',
-                activeUser: '',
-                newMessage: '',
-                info: '',
-            },
-            components: {
-                'component-users-search': ComponentSearchUserInChat,
-                'component-users-in-chat': ComponentUsersInChat,
+                activeUser: undefined,
             },
             methods: {
                 startMessages(user) {
@@ -126,13 +68,11 @@
                     });
                     user.status = true;
                     this.activeUser = user;
-                    this.newMessage = "";
-                    let domDiv = app.$refs["msg-history"];
+                    eventBus.$emit('userchange');
                 },
-                addMessage() {
-                    if ((this.activeUser) && (this.newMessage)) {
-                        this.activeUser.addMessage(this.newMessage, 1);
-                        setScrollBottom();
+                addMessage(newMessage) {
+                    if ((this.activeUser) && (newMessage)) {
+                        this.activeUser.addMessage(newMessage, 1);
                         setTimeout(() => setRandomMessage(this.activeUser), 1250);
                     }
                 },
@@ -157,24 +97,17 @@
                         return [];
                 }
             },
-            watch: {
-
-            },
             mounted() {
                 let observer = new MutationObserver(function(records) {
                     let domDiv = records[0].target;
                     domDiv.scrollTop = domDiv.scrollHeight;
                 });
-                observer.observe(this.$refs["msg-history"], {
+                observer.observe(this.$refs["msg-history"].$el, {
                     childList: true,
                     subtree: true,
                 });
 
             },
-            created() {
-
-            }
-
         });
     </script>
 
