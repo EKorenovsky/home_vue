@@ -14,6 +14,8 @@ Vue.component('users-search', {
                     </div>
                 </div>
             </div>`,
+
+
 });
 
 Vue.component('users-in-chat', {
